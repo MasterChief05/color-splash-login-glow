@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -71,15 +71,18 @@ const LoginForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              id="username"
-              placeholder="Nombre de usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="h-12 border-2 border-tecsup/30 focus:border-tecsup px-4"
-              required
-            />
+          <div className="space-y-2 relative">
+            <div className="relative">
+              <Input
+                id="username"
+                placeholder="Nombre de usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="h-12 border-2 border-tecsup/30 focus:border-tecsup pl-10 px-4"
+                required
+              />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+            </div>
           </div>
           
           <div className="space-y-2 relative">
