@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Eye, EyeOff, Google, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -127,7 +127,7 @@ const LoginForm = () => {
             className="w-full h-12 flex items-center justify-center gap-2 border-2 border-gray-300 hover:bg-gray-50"
             onClick={handleGoogleLogin}
           >
-            <Google className="h-5 w-5 text-[#4285F4]" />
+            <Mail className="h-5 w-5 text-[#4285F4]" />
             <span>Continuar con Google</span>
           </Button>
         </form>
