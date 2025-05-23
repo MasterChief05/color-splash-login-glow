@@ -1,14 +1,15 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/AppSidebar";
+import { useSidebar } from "@/hooks/useSidebar";
 import { BookOpen, GraduationCap, Calendar, LayoutDashboard } from "lucide-react";
 
 const AlumnoDashboard = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
+  const { sidebarWidth, isMobile } = useSidebar();
 
   useEffect(() => {
     // Verificar si el usuario tiene el rol correcto
@@ -29,8 +30,12 @@ const AlumnoDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <AppSidebar username={username} role="alumno" />
       
-      {/* Contenido principal con margen izquierdo para el sidebar */}
-      <div className="ml-16 transition-all duration-300">
+      {/* Contenido principal con margen dinámico */}
+      <div 
+        className={`transition-all duration-300 ${
+          isMobile ? 'ml-16' : `ml-${sidebarWidth}`
+        }`}
+      >
         {/* Header */}
         <header className="bg-white shadow-sm border-b px-6 py-4">
           <div className="flex items-center gap-3">
