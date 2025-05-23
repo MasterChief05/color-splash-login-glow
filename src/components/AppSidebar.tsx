@@ -1,19 +1,8 @@
 
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { 
   LayoutDashboard, 
   BookOpen, 
   Users, 
@@ -22,7 +11,8 @@ import {
   GraduationCap, 
   FileText,
   School,
-  User
+  User,
+  Menu
 } from "lucide-react";
 
 interface AppSidebarProps {
@@ -32,6 +22,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ username, role }: AppSidebarProps) {
   const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("userRole");
@@ -45,17 +36,17 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
       case "admin":
         return [
           {
-            title: "Panel Principal",
+            title: "Inicio",
             icon: LayoutDashboard,
             url: "/dashboard/admin",
           },
           {
-            title: "Gestión de Usuarios",
+            title: "Usuarios",
             icon: Users,
             url: "#",
           },
           {
-            title: "Administración Académica",
+            title: "Académica",
             icon: School,
             url: "#",
           },
@@ -68,22 +59,22 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
       case "profesor":
         return [
           {
-            title: "Tablero Kanban",
+            title: "Inicio",
             icon: LayoutDashboard,
             url: "/dashboard/profesor",
           },
           {
-            title: "Mis Cursos",
+            title: "Trabajos",
             icon: BookOpen,
             url: "#",
           },
           {
-            title: "Alumnos",
+            title: "Proyectos",
             icon: Users,
             url: "#",
           },
           {
-            title: "Horarios",
+            title: "Servicios",
             icon: Calendar,
             url: "#",
           },
@@ -91,23 +82,28 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
       case "alumno":
         return [
           {
-            title: "Panel Principal",
+            title: "Inicio",
             icon: LayoutDashboard,
             url: "/dashboard/alumno",
           },
           {
-            title: "Mis Cursos",
+            title: "Trabajos",
             icon: BookOpen,
             url: "#",
           },
           {
-            title: "Calificaciones",
+            title: "Proyectos",
             icon: GraduationCap,
             url: "#",
           },
           {
-            title: "Horario de Clases",
+            title: "Servicios",
             icon: Calendar,
+            url: "#",
+          },
+          {
+            title: "Contacto",
+            icon: FileText,
             url: "#",
           },
         ];
@@ -120,47 +116,72 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
   const roleLabel = role === "admin" ? "Administrador" : role === "profesor" ? "Profesor" : "Alumno";
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b p-4">
-        <div className="flex items-center gap-2">
-          <User className="h-8 w-8 text-tecsup" />
-          <div>
-            <h2 className="text-lg font-bold text-gray-800">Panel {roleLabel}</h2>
-            <p className="text-sm text-gray-600">{username}</p>
+    <div 
+      className={`fixed left-0 top-0 h-full bg-teal-700 text-white transition-all duration-300 ease-in-out z-50 ${
+        isExpanded ? 'w-64' : 'w-16'
+      }`}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
+      {/* Header con botón de menú */}
+      <div className="flex items-center p-4 border-b border-teal-600">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-white hover:bg-teal-600 p-2"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <Menu size={20} />
+        </Button>
+        {isExpanded && (
+          <span className="ml-3 font-semibold text-lg">Menú</span>
+        )}
+      </div>
+
+      {/* Información del usuario */}
+      {isExpanded && (
+        <div className="p-4 border-b border-teal-600">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-teal-600 rounded-full flex items-center justify-center">
+              <User size={20} />
+            </div>
+            <div>
+              <p className="font-medium text-sm">{roleLabel}</p>
+              <p className="text-xs text-teal-200">{username}</p>
+            </div>
           </div>
         </div>
-      </SidebarHeader>
+      )}
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navegación</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center gap-2">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+      {/* Menú de navegación */}
+      <nav className="flex-1 py-4">
+        {menuItems.map((item, index) => (
+          <a
+            key={index}
+            href={item.url}
+            className="flex items-center px-4 py-3 text-white hover:bg-teal-600 transition-colors border-b border-teal-600/30"
+          >
+            <item.icon size={20} className="min-w-[20px]" />
+            {isExpanded && (
+              <span className="ml-4 text-sm">{item.title}</span>
+            )}
+          </a>
+        ))}
+      </nav>
 
-      <SidebarFooter className="border-t p-4">
+      {/* Botón de cerrar sesión */}
+      <div className="p-4 border-t border-teal-600">
         <Button 
-          variant="outline" 
-          className="w-full flex items-center gap-2"
+          variant="ghost" 
+          className={`w-full text-white hover:bg-teal-600 transition-colors ${
+            isExpanded ? 'justify-start' : 'justify-center'
+          }`}
           onClick={handleLogout}
         >
-          <LogOut size={16} />
-          Cerrar sesión
+          <LogOut size={20} className="min-w-[20px]" />
+          {isExpanded && <span className="ml-4">Cerrar sesión</span>}
         </Button>
-      </SidebarFooter>
-    </Sidebar>
+      </div>
+    </div>
   );
 }
