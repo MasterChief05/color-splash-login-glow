@@ -5,6 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+// Usuarios predefinidos por rol
+const USERS = {
+  admin: { username: "admin", password: "admin123", role: "admin" },
+  profesor: { username: "profesor", password: "profesor123", role: "profesor" },
+  alumno: { username: "alumno", password: "alumno123", role: "alumno" }
+};
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +20,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,14 +43,32 @@ const LoginForm = () => {
     }
 
     setIsLoading(true);
-    // Simulación de login
+    
+    // Verificar las credenciales
     setTimeout(() => {
-      toast({
-        title: "¡Bienvenido!",
-        description: `Has iniciado sesión como ${username}`,
-      });
+      const foundUser = Object.values(USERS).find(
+        (user) => user.username === username && user.password === password
+      );
+
+      if (foundUser) {
+        toast({
+          title: "¡Bienvenido!",
+          description: `Has iniciado sesión como ${foundUser.role}`,
+        });
+        // Guardar el rol del usuario en localStorage
+        localStorage.setItem("userRole", foundUser.role);
+        localStorage.setItem("username", username);
+        
+        // Redirigir al dashboard correspondiente
+        navigate(`/dashboard/${foundUser.role}`);
+      } else {
+        toast({
+          title: "Error",
+          description: "Usuario o contraseña incorrectos",
+          variant: "destructive",
+        });
+      }
       setIsLoading(false);
-      // Aquí podríamos redirigir al usuario a otra página
     }, 1500);
   };
 
@@ -71,22 +98,23 @@ const LoginForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2 relative">
+          <div className="space-y-2">
             <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
               <Input
                 id="username"
                 placeholder="Nombre de usuario"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-12 border-2 border-tecsup/30 focus:border-tecsup pl-10 px-4"
+                className="h-12 border-2 border-tecsup/30 focus:border-tecsup pl-10 pr-4"
                 required
               />
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
             </div>
           </div>
           
-          <div className="space-y-2 relative">
+          <div className="space-y-2">
             <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -96,7 +124,6 @@ const LoginForm = () => {
                 className="h-12 border-2 border-tecsup/30 focus:border-tecsup pl-10 pr-12"
                 required
               />
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -134,6 +161,15 @@ const LoginForm = () => {
             <span>Continuar con Google</span>
           </Button>
         </form>
+        
+        <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Credenciales para pruebas:</h3>
+          <div className="text-xs text-gray-600 space-y-1">
+            <p><strong>Admin:</strong> usuario: admin, contraseña: admin123</p>
+            <p><strong>Profesor:</strong> usuario: profesor, contraseña: profesor123</p>
+            <p><strong>Alumno:</strong> usuario: alumno, contraseña: alumno123</p>
+          </div>
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col">
         <div className="mt-2">
