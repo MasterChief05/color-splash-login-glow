@@ -129,11 +129,9 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
 
   return (
     <>
-      {/* Sidebar */}
+      {/* Sidebar - Posición fija que no tapa contenido */}
       <div 
-        className={`fixed left-0 top-0 h-full bg-teal-700 text-white transition-all duration-300 ease-in-out ${
-          isMobile ? 'z-50' : 'z-40'
-        } ${
+        className={`fixed left-0 top-0 h-full bg-teal-700 text-white transition-all duration-300 ease-in-out z-40 ${
           isExpanded ? 'w-64' : 'w-16'
         }`}
         onMouseEnter={() => !isMobile && setIsExpanded(true)}

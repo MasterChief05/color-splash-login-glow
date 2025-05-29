@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +11,7 @@ import { Plus, MoreHorizontal, Calendar, Users, BookOpen, LayoutDashboard } from
 const ProfesorDashboard = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
-  const { sidebarWidth, isMobile } = useSidebar();
+  const { contentMargin } = useSidebar();
 
   useEffect(() => {
     // Verificar si el usuario tiene el rol correcto
@@ -71,12 +72,8 @@ const ProfesorDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <AppSidebar username={username} role="profesor" />
       
-      {/* Contenido principal con margen dinámico */}
-      <div 
-        className={`transition-all duration-300 ${
-          isMobile ? 'ml-16' : `ml-${sidebarWidth}`
-        }`}
-      >
+      {/* Contenido principal que se ajusta al sidebar */}
+      <div className={`transition-all duration-300 ${contentMargin}`}>
         {/* Header */}
         <header className="bg-white shadow-sm border-b px-6 py-4">
           <div className="flex items-center gap-3">

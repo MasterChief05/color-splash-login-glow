@@ -21,10 +21,16 @@ export const useSidebar = () => {
     return isExpanded ? '64' : '16'; // En web: expandido 64 (16rem), colapsado 16 (4rem)
   };
 
+  const getContentMargin = () => {
+    if (isMobile) return 'ml-16'; // En móvil siempre margen fijo
+    return isExpanded ? 'ml-64' : 'ml-16'; // En web: margen dinámico
+  };
+
   return {
     isExpanded,
     setIsExpanded,
     isMobile,
-    sidebarWidth: getSidebarWidth()
+    sidebarWidth: getSidebarWidth(),
+    contentMargin: getContentMargin()
   };
 };
