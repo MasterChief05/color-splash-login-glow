@@ -22,9 +22,9 @@ export const KanbanColumn = ({ column, onAddTask, onEditTask, onDeleteTask }: Ka
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+    <div className="bg-card dark:bg-card rounded-lg p-4 shadow-sm border border-border">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-gray-700 flex items-center gap-2">
+        <h3 className="font-semibold text-foreground flex items-center gap-2">
           <div className={`w-3 h-3 rounded-full ${getStatusColor(column.status)}`}></div>
           {column.title} ({column.tasks.length})
         </h3>

@@ -126,49 +126,40 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
   };
 
   const menuItems = getMenuItems();
-  const roleLabel = role === "admin" ? "Administrador" : role === "profesor" ? "Profesor" : "Alumno";
 
   return (
     <>
-      {/* Sidebar que empuja contenido en web */}
+      {/* Sidebar minimalista */}
       <div 
-        className={`bg-tecsup dark:bg-tecsup-dark text-white transition-all duration-300 ease-in-out ${
+        className={`bg-tecsup text-white transition-all duration-300 ease-in-out ${
           isMobile 
             ? `fixed left-0 top-0 h-full z-50 ${isExpanded ? 'w-64' : 'w-16'}` 
-            : `relative h-screen ${isExpanded ? 'w-64' : 'w-16'}`
+            : `relative h-screen w-16`
         }`}
-        onMouseEnter={() => !isMobile && setIsExpanded(true)}
-        onMouseLeave={() => !isMobile && setIsExpanded(false)}
       >
-        {/* Header con botón de menú y toggle de tema */}
-        <div className="flex items-center justify-between p-4 border-b border-tecsup-light/30 dark:border-tecsup-light/20">
+        {/* Header con toggle */}
+        <div className="flex flex-col items-center p-3 border-b border-tecsup-light/30">
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-tecsup-light/20 p-2"
+            className="text-white hover:bg-tecsup-light/20 p-2 mb-2"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <Menu size={20} />
+            <Menu size={18} />
           </Button>
-          {isExpanded && (
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-lg">Menú</span>
-              <ThemeToggle />
-            </div>
-          )}
-          {!isExpanded && <ThemeToggle />}
+          <ThemeToggle />
         </div>
 
-        {/* Información del usuario */}
-        {isExpanded && (
-          <div className="p-4 border-b border-tecsup-light/30 dark:border-tecsup-light/20">
+        {/* Información del usuario (solo en móvil expandido) */}
+        {isMobile && isExpanded && (
+          <div className="p-4 border-b border-tecsup-light/30">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-tecsup-light/30 dark:bg-tecsup-light/20 rounded-full flex items-center justify-center">
-                <User size={20} />
+              <div className="w-8 h-8 bg-tecsup-light/30 rounded-full flex items-center justify-center">
+                <User size={16} />
               </div>
               <div>
-                <p className="font-medium text-sm">{roleLabel}</p>
-                <p className="text-xs text-tecsup-light dark:text-tecsup-light/80">{username}</p>
+                <p className="font-medium text-sm">{role === "admin" ? "Admin" : role === "profesor" ? "Profesor" : "Alumno"}</p>
+                <p className="text-xs text-tecsup-light">{username}</p>
               </div>
             </div>
           </div>
@@ -177,30 +168,30 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
         {/* Menú de navegación */}
         <nav className="flex-1 py-4">
           {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.url}
-              className="flex items-center px-4 py-3 text-white hover:bg-tecsup-light/20 dark:hover:bg-tecsup-light/10 transition-colors border-b border-tecsup-light/20 dark:border-tecsup-light/10"
-            >
-              <item.icon size={20} className="min-w-[20px]" />
-              {isExpanded && (
-                <span className="ml-4 text-sm">{item.title}</span>
-              )}
-            </a>
+            <div key={index} className="px-2 mb-2">
+              <a
+                href={item.url}
+                className="flex items-center justify-center w-12 h-12 text-white hover:bg-tecsup-light/20 transition-colors rounded-lg group relative"
+                title={item.title}
+              >
+                <item.icon size={20} />
+                {isMobile && isExpanded && (
+                  <span className="ml-4 text-sm absolute left-12 whitespace-nowrap">{item.title}</span>
+                )}
+              </a>
+            </div>
           ))}
         </nav>
 
         {/* Botón de cerrar sesión */}
-        <div className="p-4 border-t border-tecsup-light/30 dark:border-tecsup-light/20">
+        <div className="p-2 border-t border-tecsup-light/30">
           <Button 
             variant="ghost" 
-            className={`w-full text-white hover:bg-tecsup-light/20 dark:hover:bg-tecsup-light/10 transition-colors ${
-              isExpanded ? 'justify-start' : 'justify-center'
-            }`}
+            className="w-12 h-12 text-white hover:bg-tecsup-light/20 transition-colors rounded-lg"
             onClick={handleLogout}
+            title="Cerrar sesión"
           >
-            <LogOut size={20} className="min-w-[20px]" />
-            {isExpanded && <span className="ml-4">Cerrar sesión</span>}
+            <LogOut size={20} />
           </Button>
         </div>
       </div>

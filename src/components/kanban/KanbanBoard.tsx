@@ -44,7 +44,7 @@ export const KanbanBoard = ({ userRole }: KanbanBoardProps) => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-background p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {columns.map(column => (
           <KanbanColumn
@@ -64,6 +64,6 @@ export const KanbanBoard = ({ userRole }: KanbanBoardProps) => {
         onSave={handleSaveTask}
         mode={dialogMode}
       />
-    </>
+    </div>
   );
 };
