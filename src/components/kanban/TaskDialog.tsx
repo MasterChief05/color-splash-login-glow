@@ -6,45 +6,46 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Task, Priority } from "@/types/kanban";
+import { Task, Priority, TaskStatus } from "@/types/kanban";
 
 interface TaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  task?: Task | null;
-  onSave: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  task: Task | null;
+  onSave: (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
   mode: 'create' | 'edit';
 }
 
 export const TaskDialog = ({ open, onOpenChange, task, onSave, mode }: TaskDialogProps) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    priority: 'media' as Priority,
-    status: 'pending' as const
-  });
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState<Priority>("media");
+  const [status, setStatus] = useState<TaskStatus>("pending");
 
   useEffect(() => {
     if (task && mode === 'edit') {
-      setFormData({
-        title: task.title,
-        description: task.description,
-        priority: task.priority,
-        status: task.status
-      });
+      setTitle(task.title);
+      setDescription(task.description);
+      setPriority(task.priority);
+      setStatus(task.status);
     } else {
-      setFormData({
-        title: '',
-        description: '',
-        priority: 'media',
-        status: 'pending'
-      });
+      setTitle("");
+      setDescription("");
+      setPriority("media");
+      setStatus("pending");
     }
   }, [task, mode, open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
+  const handleSave = () => {
+    if (!title.trim()) return;
+    
+    onSave({
+      title,
+      description,
+      priority,
+      status,
+    });
+    
     onOpenChange(false);
   };
 
@@ -56,55 +57,62 @@ export const TaskDialog = ({ open, onOpenChange, task, onSave, mode }: TaskDialo
             {mode === 'create' ? 'Crear Nueva Tarea' : 'Editar Tarea'}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
             <Label htmlFor="title">Título</Label>
             <Input
               id="title"
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              className="focus:border-tecsup"
-              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Título de la tarea"
+              className="focus:ring-tecsup focus:border-tecsup"
             />
           </div>
-          
-          <div>
+          <div className="grid gap-2">
             <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="focus:border-tecsup"
-              rows={3}
-              required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Descripción de la tarea"
+              className="focus:ring-tecsup focus:border-tecsup"
             />
           </div>
-
-          <div>
+          <div className="grid gap-2">
             <Label htmlFor="priority">Prioridad</Label>
-            <Select value={formData.priority} onValueChange={(value: Priority) => 
-              setFormData(prev => ({ ...prev, priority: value }))
-            }>
-              <SelectTrigger className="focus:border-tecsup">
-                <SelectValue />
+            <Select value={priority} onValueChange={(value: Priority) => setPriority(value)}>
+              <SelectTrigger className="focus:ring-tecsup focus:border-tecsup">
+                <SelectValue placeholder="Selecciona una prioridad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="alta">Alta</SelectItem>
-                <SelectItem value="media">Media</SelectItem>
                 <SelectItem value="baja">Baja</SelectItem>
+                <SelectItem value="media">Media</SelectItem>
+                <SelectItem value="alta">Alta</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit" className="bg-tecsup hover:bg-tecsup/90">
-              {mode === 'create' ? 'Crear' : 'Guardar'}
-            </Button>
+          <div className="grid gap-2">
+            <Label htmlFor="status">Estado</Label>
+            <Select value={status} onValueChange={(value: TaskStatus) => setStatus(value)}>
+              <SelectTrigger className="focus:ring-tecsup focus:border-tecsup">
+                <SelectValue placeholder="Selecciona un estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pendiente</SelectItem>
+                <SelectItem value="inProgress">En Progreso</SelectItem>
+                <SelectItem value="completed">Completado</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </form>
+        </div>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
+          </Button>
+          <Button onClick={handleSave} className="bg-tecsup hover:bg-tecsup-dark text-white">
+            {mode === 'create' ? 'Crear' : 'Guardar'}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
