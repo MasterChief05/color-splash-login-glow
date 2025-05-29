@@ -129,10 +129,12 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
 
   return (
     <>
-      {/* Sidebar - Posición fija que no tapa contenido */}
+      {/* Sidebar que empuja contenido en web */}
       <div 
-        className={`fixed left-0 top-0 h-full bg-teal-700 text-white transition-all duration-300 ease-in-out z-40 ${
-          isExpanded ? 'w-64' : 'w-16'
+        className={`bg-teal-700 text-white transition-all duration-300 ease-in-out ${
+          isMobile 
+            ? `fixed left-0 top-0 h-full z-50 ${isExpanded ? 'w-64' : 'w-16'}` 
+            : `relative h-screen ${isExpanded ? 'w-64' : 'w-16'}`
         }`}
         onMouseEnter={() => !isMobile && setIsExpanded(true)}
         onMouseLeave={() => !isMobile && setIsExpanded(false)}
@@ -201,7 +203,7 @@ export function AppSidebar({ username, role }: AppSidebarProps) {
       {/* Overlay para móvil cuando está expandido */}
       {isMobile && isExpanded && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsExpanded(false)}
         />
       )}

@@ -5,13 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppSidebar } from "@/components/AppSidebar";
-import { useSidebar } from "@/hooks/useSidebar";
 import { Plus, MoreHorizontal, Calendar, Users, BookOpen, LayoutDashboard } from "lucide-react";
 
 const ProfesorDashboard = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
-  const { contentMargin } = useSidebar();
 
   useEffect(() => {
     // Verificar si el usuario tiene el rol correcto
@@ -69,11 +67,11 @@ const ProfesorDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       <AppSidebar username={username} role="profesor" />
       
       {/* Contenido principal que se ajusta al sidebar */}
-      <div className={`transition-all duration-300 ${contentMargin}`}>
+      <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow-sm border-b px-6 py-4">
           <div className="flex items-center gap-3">
@@ -86,7 +84,7 @@ const ProfesorDashboard = () => {
         </header>
 
         {/* Contenido principal */}
-        <div className="p-6">
+        <div className="p-6 flex-1">
           <Tabs defaultValue="kanban" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="kanban">Tablero Kanban</TabsTrigger>

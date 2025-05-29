@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/AppSidebar";
-import { useSidebar } from "@/hooks/useSidebar";
 import { BookOpen, GraduationCap, Calendar, LayoutDashboard } from "lucide-react";
 
 const AlumnoDashboard = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
-  const { contentMargin } = useSidebar();
 
   useEffect(() => {
     // Verificar si el usuario tiene el rol correcto
@@ -28,11 +26,11 @@ const AlumnoDashboard = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       <AppSidebar username={username} role="alumno" />
       
       {/* Contenido principal que se ajusta al sidebar */}
-      <div className={`transition-all duration-300 ${contentMargin}`}>
+      <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow-sm border-b px-6 py-4">
           <div className="flex items-center gap-3">
@@ -45,7 +43,7 @@ const AlumnoDashboard = () => {
         </header>
         
         {/* Contenido principal */}
-        <div className="p-6">
+        <div className="p-6 flex-1">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card className="shadow-sm hover:shadow-md transition-shadow">
